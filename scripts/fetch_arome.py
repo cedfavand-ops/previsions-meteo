@@ -65,7 +65,7 @@ def fetch_arome_forecast() -> dict[str, Any]:
     # donc on se contente de logger l'heure de première valeur pour audit.
     run_reference_time = times[0]
 
-  records = []
+    records = []
     n = len(times)
     for i in range(n):
         temp = hourly["temperature_2m"][i]
