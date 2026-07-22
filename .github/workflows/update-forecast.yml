@@ -37,7 +37,7 @@ jobs:
         run: python scripts/build_forecast.py
 
       - name: Commit + push data/forecast.json
-      shell: bash
+        shell: bash
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
