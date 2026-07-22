@@ -77,7 +77,16 @@ def fetch_station_observations(station_id: str, hours_back: int = 6) -> list[dic
         )
 
     url = _build_url(station_id, hours_back)
-    resp = requests.get(url, timeout=30)
+    try:
+        resp = requests.get(url, timeout=30)
+    except requests.exceptions.RequestException as e:
+        # Panne réseau, timeout, DNS, etc. : traité comme une indisponibilité
+        # normale de la station plutôt qu'un plantage du script — le run
+        # continue avec les prévisions AROME brutes pour cette variable.
+        raise InfoclimatFetchError(
+            f"Impossible de contacter Infoclimat pour la station {station_id} : {e}"
+        ) from e
+
     if resp.status_code != 200:
         raise InfoclimatFetchError(
             f"Infoclimat a répondu {resp.status_code} pour la station {station_id}: "
