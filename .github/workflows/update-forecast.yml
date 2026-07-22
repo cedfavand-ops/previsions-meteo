@@ -1,0 +1,45 @@
+name: Mise à jour prévisions (run 12z)
+
+on:
+  schedule:
+    # 15:30 UTC ≈ 17h30 (été) / 16h30 (hiver) heure de Paris.
+    # Le run 12z AROME HD est généralement ingéré par Open-Meteo quelques
+    # heures après 12h TU ; ajustez si besoin après quelques jours
+    # d'observation (voir README, section "Calage horaire du run 12z").
+    - cron: "30 15 * * *"
+  workflow_dispatch: {}
+
+jobs:
+  update:
+    # ⚠️ IMPORTANT : la clé API Infoclimat est liée à une adresse IP fixe.
+    # Les runners "GitHub-hosted" (ubuntu-latest) changent d'IP à chaque
+    # exécution et ne fonctionneront donc PAS avec Infoclimat.
+    # -> Ce workflow est prévu pour un "self-hosted runner" installé chez
+    # vous (Raspberry Pi, NAS, PC toujours allumé...), dont l'IP est celle
+    # que vous avez enregistrée sur https://www.infoclimat.fr/opendata/
+    # Voir le README pour la procédure d'installation (10 minutes).
+    runs-on: self-hosted
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Installer les dépendances
+        run: pip install -r requirements.txt
+
+      - name: Générer les prévisions
+        env:
+          INFOCLIMAT_API_KEY: ${{ secrets.INFOCLIMAT_API_KEY }}
+          INFOCLIMAT_QUERY_TEMPLATE: ${{ secrets.INFOCLIMAT_QUERY_TEMPLATE }}
+        run: python scripts/build_forecast.py
+
+      - name: Commit + push data/forecast.json
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/forecast.json
+          git diff --cached --quiet || git commit -m "Mise à jour prévisions $(date -u +'%Y-%m-%d %H:%M UTC')"
+          git push
