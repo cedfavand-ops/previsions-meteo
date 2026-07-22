@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Saint-Paul-les-Fonts — Prévisions AROME HD recalibrées</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <h1>Saint-Paul-les-Fonts</h1>
+      <p class="subtitle" id="run-info">Chargement des prévisions…</p>
+    </div>
+  </header>
+
+  <main class="wrap">
+
+    <section class="tn-tx-grid" id="tn-tx-grid" aria-live="polite">
+      <div class="tn-tx-card" id="card-tn">
+        <span class="tn-tx-label">Cette nuit — TN</span>
+        <span class="tn-tx-value" id="tn-value">—</span>
+        <span class="tn-tx-time" id="tn-time"></span>
+      </div>
+      <div class="tn-tx-card" id="card-tx">
+        <span class="tn-tx-label">Demain — TX</span>
+        <span class="tn-tx-value" id="tx-value">—</span>
+        <span class="tn-tx-time" id="tx-time"></span>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Température — 36 prochaines heures</h2>
+      <div class="chart-wrap">
+        <canvas id="temp-chart" role="img" aria-label="Courbe de température horaire recalibrée pour les 36 prochaines heures"></canvas>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Heure par heure</h2>
+      <div class="hourly-strip" id="hourly-strip">
+        <p class="loading">Chargement…</p>
+      </div>
+    </section>
+
+    <p class="warnings" id="warnings" hidden></p>
+
+  </main>
+
+  <footer class="footer">
+    <p>
+      Prévisions brutes AROME HD (Météo-France) via
+      <a href="https://open-meteo.com/">Open-Meteo</a>.
+      Température, humidité et vent recalibrés à partir des observations de
+      la station personnelle
+      <a href="https://www.infoclimat.fr/observations-meteo/temps-reel/saint-paul-les-fonts/000ZB.html">Saint-Paul-les-Fonts (000ZB)</a>
+      et de la station voisine
+      <a href="https://www.infoclimat.fr/observations-meteo/temps-reel/saint-pons-la-calm-la-gardie/STATIC0451.html">Saint-Pons-la-Calm–La Gardie</a>
+      (réseau <a href="https://www.infoclimat.fr/">Infoclimat</a>). Pluie non recalibrée (AROME brut).
+    </p>
+    <p>Pictogrammes météo © <a href="https://www.meteoblue.com/">meteoblue</a>.</p>
+    <p class="generated-at" id="generated-at"></p>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+  <script src="assets/app.js"></script>
+</body>
+</html>
