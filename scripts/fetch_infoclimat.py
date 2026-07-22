@@ -44,7 +44,7 @@ class InfoclimatFetchError(RuntimeError):
 
 
 def _build_url(station_id: str, hours_back: int) -> str:
-    template = os.environ.get("INFOCLIMAT_QUERY_TEMPLATE", DEFAULT_TEMPLATE)
+     template = os.environ.get("INFOCLIMAT_QUERY_TEMPLATE") or DEFAULT_TEMPLATE
 
     end = dt.datetime.utcnow()
     start = end - dt.timedelta(hours=hours_back)
