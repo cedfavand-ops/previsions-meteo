@@ -8,7 +8,8 @@ on:
     # d'observation (voir README, section "Calage horaire du run 12z").
     - cron: "30 15 * * *"
   workflow_dispatch: {}
-
+permissions:
+  contents: write
 jobs:
   update:
     # ⚠️ IMPORTANT : la clé API Infoclimat est liée à une adresse IP fixe.
