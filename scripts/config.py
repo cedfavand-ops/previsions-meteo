@@ -23,10 +23,8 @@ STATION_TEMP_HUMI = {
 STATION_WIND = {
     "infoclimat_id": "STATIC0451",
     "name": "Saint-Pons-la-Calm - La Gardie",
-    # Coordonnées approximatives (à ajuster si besoin, voir la page
-    # "Métadonnées" de la station sur infoclimat.fr) :
-    "lat": 44.05,
-    "lon": 4.42,
+    "lat": 44.08024047466172,
+    "lon": 4.552776630395043,
 }
 
 # Point de grille utilisé pour interroger AROME HD (on prend la station
