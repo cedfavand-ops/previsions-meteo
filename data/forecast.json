@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-22T09:57:46.289421Z",
+  "generated_at": "2026-07-22T10:10:16.384008Z",
   "model": "meteofrance_arome_france_hd + meteofrance_arome_france",
   "arome_first_hourly_time": "2026-07-22T00:00",
   "station_temp_humi": {
@@ -12,8 +12,8 @@
   "station_wind": {
     "infoclimat_id": "STATIC0451",
     "name": "Saint-Pons-la-Calm - La Gardie",
-    "lat": 44.05,
-    "lon": 4.42
+    "lat": 44.08024047466172,
+    "lon": 4.552776630395043
   },
   "bias_applied": {
     "temperature": null,
