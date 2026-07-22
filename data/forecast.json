@@ -1,1 +1,30 @@
-{"note": "Ce fichier est généré par scripts/build_forecast.py — placeholder initial, sera écrasé au premier run."}
+{
+  "generated_at": "2026-07-22T09:48:55.483313Z",
+  "model": "meteofrance_arome_france_hd",
+  "arome_first_hourly_time": "2026-07-22T00:00",
+  "station_temp_humi": {
+    "infoclimat_id": "000ZB",
+    "name": "Saint-Paul-les-Fonts",
+    "lat": 44.08,
+    "lon": 4.61,
+    "altitude_m": 80
+  },
+  "station_wind": {
+    "infoclimat_id": "STATIC0451",
+    "name": "Saint-Pons-la-Calm - La Gardie",
+    "lat": 44.05,
+    "lon": 4.42
+  },
+  "bias_applied": {
+    "temperature": null,
+    "humidity": null,
+    "wind_speed": null
+  },
+  "warnings": [
+    "Station temp/humidité indisponible : Impossible de contacter Infoclimat pour la station 000ZB : HTTPSConnectionPool(host='www.infoclimat.fr', port=443): Read timed out. (read timeout=30)",
+    "Station vent indisponible : Impossible de contacter Infoclimat pour la station STATIC0451 : HTTPSConnectionPool(host='www.infoclimat.fr', port=443): Read timed out. (read timeout=30)"
+  ],
+  "tn_tonight": null,
+  "tx_tomorrow": null,
+  "hourly": []
+}
