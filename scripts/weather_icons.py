@@ -45,5 +45,7 @@ _WMO_TO_CATEGORY = {
     99: "thunderstorm_hail",
 }
 
-def category_for(weathercode: int) -> str:
+def category_for(weathercode) -> str:
+    if weathercode is None:
+        return "unknown"
     return _WMO_TO_CATEGORY.get(int(weathercode), "unknown")
