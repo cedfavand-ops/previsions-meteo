@@ -65,16 +65,23 @@ def fetch_arome_forecast() -> dict[str, Any]:
     # donc on se contente de logger l'heure de première valeur pour audit.
     run_reference_time = times[0]
 
-    records = []
+  records = []
     n = len(times)
     for i in range(n):
+        temp = hourly["temperature_2m"][i]
+        code = hourly["weathercode"][i]
+        # Au-delà de l'horizon réellement couvert par AROME HD, Open-Meteo
+        # peut renvoyer `null` pour certaines heures du calendrier demandé :
+        # on les ignore plutôt que de planter plus loin dans le pipeline.
+        if temp is None or code is None:
+            continue
         records.append(
             {
                 "time": times[i],
-                "temperature_2m": hourly["temperature_2m"][i],
+                "temperature_2m": temp,
                 "relative_humidity_2m": hourly["relative_humidity_2m"][i],
                 "precipitation": hourly["precipitation"][i],
-                "weathercode": hourly["weathercode"][i],
+                "weathercode": code,
                 "windspeed_10m": hourly["windspeed_10m"][i],
                 "winddirection_10m": hourly["winddirection_10m"][i],
                 "windgusts_10m": hourly["windgusts_10m"][i],
