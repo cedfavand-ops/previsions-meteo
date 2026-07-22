@@ -121,12 +121,25 @@ def _normalize_payload(payload: Any, station_id: str) -> list[dict[str, Any]]:
     elif isinstance(payload, list):
         candidates = payload
 
-    if candidates is None:
+  if candidates is None:
         raise InfoclimatFetchError(
             "Structure de réponse Infoclimat non reconnue — adaptez "
             "_normalize_payload() dans fetch_infoclimat.py. Réponse brute : "
             f"{str(payload)[:500]}"
         )
+
+    # Le format "hourly" peut être soit une liste d'observations (une par
+    # heure), soit un format "en colonnes" (un dict de listes parallèles,
+    # ex. {"dh_utc": [...], "temperature": [...], ...}). On détecte et
+    # convertit ce 2e cas vers une liste de dicts pour traiter les deux
+    # de façon identique ensuite.
+    if isinstance(candidates, dict):
+        keys = list(candidates.keys())
+        length = len(candidates[keys[0]]) if keys else 0
+        candidates = [
+            {k: candidates[k][i] for k in keys if i < len(candidates[k])}
+            for i in range(length)
+        ]
 
     for item in candidates:
         # On tente plusieurs noms de champs courants selon les versions de l'API
