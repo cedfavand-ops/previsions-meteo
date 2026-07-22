@@ -102,6 +102,17 @@ function formatFullTime(isoTime) {
   });
 }
 
+const COMPASS_POINTS = [
+  "N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE",
+  "S", "SSO", "SO", "OSO", "O", "ONO", "NO", "NNO",
+];
+
+function degToCompass(deg) {
+  if (deg === null || deg === undefined) return "";
+  const index = Math.round(deg / 22.5) % 16;
+  return COMPASS_POINTS[index];
+}
+
 async function loadForecast() {
   const res = await fetch("data/forecast.json", { cache: "no-store" });
   if (!res.ok) {
@@ -165,7 +176,13 @@ function renderHourlyStrip(data) {
     precip.className = "h-precip";
     precip.textContent = h.precipitation > 0 ? `${h.precipitation.toFixed(1)}mm` : "";
 
-    item.append(time, icon, temp, precip);
+    const wind = document.createElement("div");
+    wind.className = "h-wind";
+    const dir = degToCompass(h.wind_direction);
+    const gust = Math.round(h.wind_gust);
+    wind.innerHTML = `<span class="h-wind-dir">${dir}</span><br>${gust} km/h`;
+
+    item.append(time, icon, temp, precip, wind);
     container.appendChild(item);
   });
 }
