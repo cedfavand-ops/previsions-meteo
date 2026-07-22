@@ -35,7 +35,7 @@ import os
 
 DEFAULT_TEMPLATE = (
     INFOCLIMAT_BASE_URL
-    + "?token={token}&stations[]={station_id}&start={start}&end={end}&format=json"
+    + "?version=2&method=get&format=json&stations[]={station_id}&start={start}&end={end}&token={token}"
 )
 
 
@@ -44,16 +44,24 @@ class InfoclimatFetchError(RuntimeError):
 
 
 def _build_url(station_id: str, hours_back: int) -> str:
-     template = os.environ.get("INFOCLIMAT_QUERY_TEMPLATE") or DEFAULT_TEMPLATE
+    # os.environ.get(..., default) ne revient PAS au défaut si la variable
+    # existe mais est vide (ex. secret GitHub Actions non renseigné) : on
+    # gère donc explicitement ce cas avec "or".
+    template = os.environ.get("INFOCLIMAT_QUERY_TEMPLATE") or DEFAULT_TEMPLATE
 
-    end = dt.datetime.utcnow()
-    start = end - dt.timedelta(hours=hours_back)
+    # L'API Infoclimat attend des dates simples (AAAA-MM-JJ), pas des
+    # horodatages précis. On remonte d'au moins 1 jour complet pour être
+    # sûr de couvrir les `hours_back` dernières heures même si l'exécution
+    # a lieu tôt le matin.
+    end_date = dt.datetime.utcnow().date()
+    days_back = max(1, (hours_back // 24) + 1)
+    start_date = end_date - dt.timedelta(days=days_back)
 
     return template.format(
         token=INFOCLIMAT_API_KEY,
         station_id=station_id,
-        start=start.strftime("%Y-%m-%d %H:%M:%S"),
-        end=end.strftime("%Y-%m-%d %H:%M:%S"),
+        start=start_date.strftime("%Y-%m-%d"),
+        end=end_date.strftime("%Y-%m-%d"),
     )
 
 
@@ -88,11 +96,15 @@ def _normalize_payload(payload: Any, station_id: str) -> list[dict[str, Any]]:
 
     records: list[dict[str, Any]] = []
 
-    # Forme 1 : {"hourly": [...]} ou liste directe d'observations
+    # Forme 1 : {"hourly": [...]} directement, ou liste brute
     candidates = None
     if isinstance(payload, dict):
         if "hourly" in payload:
             candidates = payload["hourly"]
+        elif station_id in payload and isinstance(payload[station_id], dict):
+            # Format confirmé de l'API Infoclimat (method=get&version=2) :
+            # {"000ZB": {"hourly": [...]}, ...}
+            candidates = payload[station_id].get("hourly")
         elif station_id in payload:
             candidates = payload[station_id]
         elif "data" in payload:
