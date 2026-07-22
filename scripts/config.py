@@ -36,14 +36,22 @@ AROME_LAT = STATION_TEMP_HUMI["lat"]
 AROME_LON = STATION_TEMP_HUMI["lon"]
 
 # ---------------------------------------------------------------------------
-# Open-Meteo (accès libre, sans clé, aux runs AROME HD de Météo-France)
+# Open-Meteo (accès libre, sans clé, aux runs Météo-France)
 # ---------------------------------------------------------------------------
+# Important : le modèle AROME France HD (1.3 km) ne fournit PAS toutes les
+# variables (pas d'humidité, de vent, ni de code météo — voir la doc
+# Open-Meteo/AWS "AROME France HD ... offers fewer weather variables").
+# On combine donc deux modèles dans le même appel :
+#  - AROME France HD : température (la plus fine résolution, comme demandé)
+#    et précipitations
+#  - AROME France (2.5 km) : humidité, vent, code météo, nébulosité
+#    (variables absentes de la version HD)
 OPEN_METEO_URL = "https://api.open-meteo.com/v1/forecast"
-OPEN_METEO_MODEL = "meteofrance_arome_france_hd"
-OPEN_METEO_HOURLY_VARS = [
-    "temperature_2m",
+OPEN_METEO_MODEL_HD = "meteofrance_arome_france_hd"
+OPEN_METEO_MODEL_STANDARD = "meteofrance_arome_france"
+OPEN_METEO_HD_VARS = ["temperature_2m", "precipitation"]
+OPEN_METEO_STANDARD_VARS = [
     "relative_humidity_2m",
-    "precipitation",
     "weathercode",
     "windspeed_10m",
     "winddirection_10m",
@@ -63,7 +71,7 @@ INFOCLIMAT_API_KEY = os.environ.get("INFOCLIMAT_API_KEY", "")
 # une fois la clé générée (le format exact peut varier selon votre compte,
 # d'où la variable d'environnement plutôt qu'une URL figée dans le code).
 INFOCLIMAT_BASE_URL = os.environ.get(
-    "INFOCLIMAT_BASE_URL", "https://www.infoclimat.fr/opendata/v1/station"
+    "INFOCLIMAT_BASE_URL", "https://www.infoclimat.fr/opendata/"
 )
 
 # ---------------------------------------------------------------------------
