@@ -37,10 +37,12 @@ jobs:
         run: python scripts/build_forecast.py
 
       - name: Commit + push data/forecast.json
-        shell: bash
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add data/forecast.json
-          git diff --cached --quiet || git commit -m "Mise à jour prévisions $(date -u +'%Y-%m-%d %H:%M UTC')"
+          git diff --cached --quiet
+          if ($LASTEXITCODE -ne 0) {
+            git commit -m "Mise a jour previsions $(Get-Date -Format 'yyyy-MM-dd HH:mm')"
+          }
           git push
