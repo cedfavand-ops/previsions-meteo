@@ -121,7 +121,7 @@ def _normalize_payload(payload: Any, station_id: str) -> list[dict[str, Any]]:
     elif isinstance(payload, list):
         candidates = payload
 
-  if candidates is None:
+    if candidates is None:
         raise InfoclimatFetchError(
             "Structure de réponse Infoclimat non reconnue — adaptez "
             "_normalize_payload() dans fetch_infoclimat.py. Réponse brute : "
